@@ -1,0 +1,14 @@
+1 transaction
+
+try deadlock
+start transaction; --1
+select name from camera where id = 1 for update; --3
+select name from camera where id = 2 for update; --3
+commit; --5
+
+2 transaction
+start transaction; --1
+select name from camera where id = 2 for update; --3
+select name from camera where id = 1 for update; --3
+commit; --5
+

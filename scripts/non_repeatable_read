@@ -1,0 +1,15 @@
+First query tool window
+
+start transaction; --1
+select name from camera where id = 1; --2   name="FHAZ_5"
+select name from camera where id = 1; --6   name="FHAZ_6"
+commit; --7
+
+Seond query tool window
+
+start transaction; --3
+update camera set name = 'FHAZ_6' where id = 1; --4
+commit; --5
+
+
+

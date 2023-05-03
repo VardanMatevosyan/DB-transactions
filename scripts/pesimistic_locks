@@ -1,0 +1,24 @@
+Manually acquire a row-level Lock :навесной_замок:
+Start Tx1 → Start Tx2 → Select your note for share in Tx1 → Select the same note for share in Tx2 → Commit Tx1 → Commit Tx2
+Start Tx1 → Start Tx2 → Select your note for update in Tx1 → Select the same note for update in Tx2 → Observe → Commit Tx1 → Commit Tx2
+Start Tx1 → Start Tx2 → Select your note for share in Tx1 → Select the same note for update in Tx2 → Observe → Commit Tx1 → Commit Tx2
+Start Tx1 → Start Tx2 → Select your note for share in Tx1 → Update the same note in Tx2 → Observe → Commit Tx1 → Commit Tx2
+
+
+start transaction; --1
+select name from camera where id = 1 for share; --3
+commit; --5
+
+start transaction; --1
+select name from camera where id = 1 for update; --3
+
+commit; --5
+
+
+start transaction; --2
+select name from camera where id = 1 for share; --4
+commit; --6
+
+start transaction; --1
+select name from camera where id = 1 for update; --3
+commit; --5
