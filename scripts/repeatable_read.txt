@@ -1,0 +1,28 @@
+
+-- Concurent update --
+
+
+
+
+-- First transaction
+-- -------------------------------------------------------------------------------
+start transaction isolation level repeatable read; -- step 1
+
+select name from camera where nasa_id = 1; -- step 3
+update camera set name = 'Updated camera - Tx1' where nasa_id = 1; -- step 5
+
+commit; -- step 7
+
+
+
+
+-- Second transaction
+-- -------------------------------------------------------------------------------
+
+start transaction isolation level repeatable read; -- step 2
+
+select name from camera where nasa_id = 1; -- step 4
+update camera set name = 'Updated camera' where nasa_id = 1; -- step 6 -- Wait untill other transaction commit
+
+-- after First transaction commit the changes this transaction will get - ERROR:  could not serialize access due to concurrent update 
+commit; -- step 8 rollback

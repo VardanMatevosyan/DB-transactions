@@ -1,0 +1,13 @@
+-- Change before savepoint would be commited or rolledbal to the declared savepoint.
+-- This is what nested transaction in spring data jpa will do.
+-- --------------------------------------------------------------------------------------------------------
+
+start transaction;
+
+update camera set name = 'updated' where nasa_id = 1;
+savepoint updated;
+
+update camera set name = null  where nasa_id = 1; -- an arror due to not null name column
+rollback to updated;
+
+commit;

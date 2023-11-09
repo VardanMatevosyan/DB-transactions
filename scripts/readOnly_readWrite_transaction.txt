@@ -1,0 +1,15 @@
+-- Read only transaction does not allow to update the record. It optimize the select operations --
+-- --------------------------------------------------------------------------------------------------------
+
+start transaction read only;
+select * from camera;
+update camera set name = 'Would not be updated'; -- cannot execute UPDATE in a read-only transaction 
+commit;
+
+
+-- Read Write transaction is for all kind of operations and it is set by defalut by postgresql --
+-- --------------------------------------------------------------------------------------------------------
+start transaction read write;
+select * from camera;
+update camera set name = 'Would be updated' where nasa_id=1; -- transaction is aborted because of read only transaction
+commit;

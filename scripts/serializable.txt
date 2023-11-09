@@ -1,0 +1,40 @@
+ 
+ -- Serializable anomaly --
+
+Can be fix using serializable isolation level, repeatable read level will allow this transactions to be commited.
+
+
+-- First transaction
+-- --------------------------------------------------------------------------------------------------------
+start transaction isolation level serializable; -- step 1
+
+
+insert into camera(created_at, name, level, nasa_id) 
+values(
+	now(), 
+	'Inserted camera - Tx2 with sum', 
+	(select  sum(level) from camera where nasa_id = 2), 
+	1
+); -- step 2
+
+commit; -- step 4
+
+
+
+-- Second transaction
+-- --------------------------------------------------------------------------------------------------------
+start transaction isolation level serializable; -- step 2
+
+
+insert into camera(created_at, name, level, nasa_id) 
+values(
+	now(), 
+	'Inserted camera - Tx2 with sum', 
+	(select sum(level) from camera where nasa_id = 1), 
+	2
+); -- step 3
+
+commit; -- step 5  -- here would be an error on commit like : 
+-- ERROR:  Reason code: Canceled on identification as a pivot, 
+-- during commit attempt.could not serialize access 
+-- due to read/write dependencies among transactions 
